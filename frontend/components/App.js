@@ -53,11 +53,12 @@ export default function App() {
       .then(res => {
         console.log(res)
         const token = res.data.token
+        window.localStorage.setItem("token", token)
         setMessage(res.data.message)
         redirectToArticles()
       })
       .catch(err => {
-        setMessage(err.response.mnessage)
+        setMessage(err.response.message)
       })
       .finally(() => {
         setSpinnerOn(false)
@@ -71,8 +72,24 @@ export default function App() {
     // On success, we should set the articles in their proper state and
     // put the server success message in its proper state.
     // If something goes wrong, check the status of the response:
+
     // if it's a 401 the token might have gone bad, and we should redirect to login.
     // Don't forget to turn off the spinner!
+    setMessage("")
+    setSpinnerOn(true)
+    axiosWithAuth().get('/articles')
+      .then(res => {
+        setArticles(res.data.articles)
+        setMessage(res.data.message)
+      })
+      .catch(err => {
+        err.response.status === 401
+          ? redirectToLogin()
+          : setMessage(err.response.data.message)
+      })
+      .finally(() => {
+        setSpinnerOn(false)
+      })
   }
 
   const postArticle = article => {
@@ -94,8 +111,8 @@ export default function App() {
   return (
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
     <>
-      <Spinner />
-      <Message />
+      <Spinner spinnerOn={spinnerOn} />
+      <Message message={message} />
       <button id="logout" onClick={logout}>Logout from app</button>
       <div id="wrapper" style={{ opacity: spinnerOn ? "0.25" : "1" }}> {/* <-- do not change this line */}
         <h1>Advanced Web Applications</h1>
@@ -107,8 +124,19 @@ export default function App() {
           <Route path="/" element={<LoginForm login={login} />} />
           <Route path="articles" element={
             <>
-              <ArticleForm />
-              <Articles />
+              <ArticleForm
+                postArticle={postArticle}
+                updateArticle={updateArticle}
+                setCurrentArticleId={setCurrentArticleId}
+                articles={articles.find(
+                  (article) => article.article_id === currentArticleId
+                )}
+              />
+              <Articles
+                articles={articles}
+                getArticles={getArticles}
+                setCurrentArticleId={setCurrentArticleId}
+              />
             </>
           } />
         </Routes>
