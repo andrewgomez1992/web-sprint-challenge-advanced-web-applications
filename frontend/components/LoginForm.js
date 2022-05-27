@@ -7,19 +7,18 @@ const initialFormValues = {
 }
 export default function LoginForm(props) {
   const [values, setValues] = useState(initialFormValues)
-  // ✨ where are my props? Destructure them here
   const { login } = props
 
   const onChange = evt => {
     const { id, value } = evt.target
     setValues({ ...values, [id]: value })
   }
-  console.log(values)
-  const onSubmit = evt => {
-    evt.preventDefault()
 
-    // ✨ implement
+  const onSubmit = evt => {
+    console.log(values)
+    evt.preventDefault()
     login(values)
+
   }
 
   const isDisabled = () => {
@@ -46,6 +45,7 @@ export default function LoginForm(props) {
         onChange={onChange}
         placeholder="Enter password"
         id="password"
+        type="password"
       />
       <button disabled={isDisabled()} id="submitCredentials">Submit credentials</button>
     </form>
