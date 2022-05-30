@@ -17,10 +17,9 @@ export default function App() {
   const [currentArticleId, setCurrentArticleId] = useState()
   const [spinnerOn, setSpinnerOn] = useState(false)
 
-  const token = localStorage.getItem("token")
-
   // ✨ Research `useNavigate` in React Router v.6
   const navigate = useNavigate()
+
   const redirectToLogin = () => {
     navigate('/')
   }
@@ -46,7 +45,7 @@ export default function App() {
     // On success, we should set the token to local storage in a 'token' key,
     // put the server success message in its proper state, and redirect
     // to the Articles screen. Don't forget to turn off the spinner!
-    setCurrentArticleId()
+    // setCurrentArticleId()
     setMessage("")
     setSpinnerOn(true)
     axiosWithAuth().post(loginUrl, { username, password })
@@ -77,7 +76,7 @@ export default function App() {
     // Don't forget to turn off the spinner!
     setMessage("")
     setSpinnerOn(true)
-    axiosWithAuth().get('/articles')
+    axiosWithAuth().get(articlesUrl)
       .then(res => {
         setArticles(res.data.articles)
         setMessage(res.data.message)
@@ -98,7 +97,7 @@ export default function App() {
     // You'll know what to do! Use log statements or breakpoints
     // to inspect the response from the server.
     setSpinnerOn(true)
-    axiosWithAuth().get('/articles', article)
+    axiosWithAuth().post(articlesUrl, article)
       .then(res => {
         setArticles([...articles, res.data.article])
         setMessage(res.data.message)
