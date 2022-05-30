@@ -97,6 +97,20 @@ export default function App() {
     // The flow is very similar to the `getArticles` function.
     // You'll know what to do! Use log statements or breakpoints
     // to inspect the response from the server.
+    setSpinnerOn(true)
+    axiosWithAuth().get('/articles', article)
+      .then(res => {
+        setArticles([...articles, res.data.article])
+        setMessage(res.data.message)
+      })
+      .catch(err => {
+        err.response.status === 401
+          ? redirectToLogin()
+          : setMessage(err.response.data.message)
+      })
+      .finally(() => {
+        setSpinnerOn(false)
+      })
   }
 
   const updateArticle = ({ article_id, article }) => {
