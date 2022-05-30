@@ -112,7 +112,7 @@ export default function App() {
       })
   }
 
-  const updateArticle = ({ article_id, article }) => {
+  const updateArticle = (article_id, article) => {
     // ✨ implement
     // You got this!
     setMessage("")
@@ -124,6 +124,7 @@ export default function App() {
         }))
         setMessage(res.data.message)
         setCurrentArticleId(null)
+        console.log(res)
       })
       .catch(err => {
         err.response.status === 401
@@ -145,7 +146,6 @@ export default function App() {
           return article.article_id !== article_id
         }))
         setMessage(res.data.message)
-        setCurrentArticleId(null)
       })
       .catch(err => {
         err.response.status === 401
@@ -180,6 +180,7 @@ export default function App() {
                 articles={articles.find(
                   (article) => article.article_id === currentArticleId
                 )}
+                redirectToArticles={redirectToArticles}
               />
               <Articles
                 deleteArticle={deleteArticle}
