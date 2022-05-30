@@ -116,10 +116,46 @@ export default function App() {
   const updateArticle = ({ article_id, article }) => {
     // ✨ implement
     // You got this!
+    setMessage("")
+    setSpinnerOn(true)
+    axiosWithAuth().put(`${articlesUrl}/${article_id}`, article)
+      .then(res => {
+        setArticles(articles.map(article => {
+          return article.article_id === article_id ? res.data.article : article
+        }))
+        setMessage(res.data.message)
+        setCurrentArticleId(null)
+      })
+      .catch(err => {
+        err.response.status === 401
+          ? redirectToLogin()
+          : setMessage(err.response.data.message)
+      })
+      .finally(() => {
+        setSpinnerOn(false)
+      })
   }
 
   const deleteArticle = article_id => {
     // ✨ implement
+    setMessage("")
+    setSpinnerOn(true)
+    axiosWithAuth().delete(`${articlesUrl}/${article_id}`)
+      .then(res => {
+        setArticles(articles.filter(article => {
+          return article.article_id !== article_id
+        }))
+        setMessage(res.data.message)
+        setCurrentArticleId(null)
+      })
+      .catch(err => {
+        err.response.status === 401
+          ? redirectToLogin()
+          : setMessage(err.response.data.message)
+      })
+      .finally(() => {
+        setSpinnerOn(false)
+      })
   }
 
   return (
@@ -147,6 +183,7 @@ export default function App() {
                 )}
               />
               <Articles
+                deleteArticle={deleteArticle}
                 articles={articles}
                 getArticles={getArticles}
                 setCurrentArticleId={setCurrentArticleId}

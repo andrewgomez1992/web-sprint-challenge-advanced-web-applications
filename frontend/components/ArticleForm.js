@@ -21,27 +21,27 @@ export default function ArticleForm(props) {
     setValues(articles || initialFormValues)
   }, [articles])
 
-  const onChange = evt => {
-    const { id, value } = evt.target
+  const onChange = e => {
+    const { id, value } = e.target
     setValues({ ...values, [id]: value })
   }
 
-  const onSubmit = evt => {
-    evt.preventDefault()
+  const onSubmit = e => {
+    e.preventDefault()
     // ✨ implement
     // We must submit a new post or update an existing one,
     // depending on the truthyness of the `currentArticle` prop.
-    articles ? updateArticle(articles.article_id, values) : postArticle(values)
+    articles ? updateArticle(articles.article_id, values) : postArticle(values);
     setValues(initialFormValues)
   }
 
-  const isDisabled = () => {
+  const isDisabled =
     // ✨ implement
     // Make sure the inputs have some values
     values.title.trim().length >= 1 &&
-      values.text.trim().length >= 1 &&
-      values.topic !== ""
-  }
+    values.text.trim().length >= 1 &&
+    values.topic !== ""
+
 
   return (
     // ✨ fix the JSX: make the heading display either "Edit" or "Create"
@@ -69,8 +69,8 @@ export default function ArticleForm(props) {
         <option value="Node">Node</option>
       </select>
       <div className="button-group">
-        <button disabled={!isDisabled()} id="submitArticle">Submit</button>
-        <button onClick={Function.prototype}>Cancel edit</button>
+        <button disabled={!isDisabled} id="submitArticle">Submit</button>
+        <button onClick={() => (setCurrentArticleId(null))}>Cancel edit</button>
       </div>
     </form>
   )
